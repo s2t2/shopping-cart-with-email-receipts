@@ -119,15 +119,19 @@ else:
     print("Sending receipt via email...")
 
     # format all product prices as we'd like them to appear in the email...
+    formatted_products = []
     for p in selected_products:
-        p["price"] = to_usd(p["price"])
+        formatted_product = p
+        if not isinstance(formatted_product["price"], str): # weird that this is necessary, only when there are duplicative selections, like 1,1 or 1,2,1 or 3,2,1,2 because when looping through and modifying a previous identical dict, it appears Python treats the next identical dict as the same object that we updated, so treating it as a copy of the first rather than its own unique object in its own right.
+            formatted_product["price"] = to_usd(p["price"])
+        formatted_products.append(formatted_product)
 
     receipt = {
         "subtotal_price_usd": to_usd(subtotal),
         "tax_price_usd": to_usd(tax),
         "total_price_usd": to_usd(total),
         "human_friendly_timestamp": human_friendly_timestamp,
-        "products": selected_products
+        "products": formatted_products
     }
     #print(receipt)
 

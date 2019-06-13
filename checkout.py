@@ -38,26 +38,27 @@ products = [
 # CAPTURE AND VALIDATE USER SELECTIONS
 #
 
-valid_ids = [str(p["id"]) for p in products] # doing comparisons with string versions of these ids
-print("VALID IDS:", valid_ids)
-
-#selected_ids = []
-selected_products = [] # capturing products instead of ids so I can pass them to the email template
+selected_products = [] # capturing products instead of ids, so I can pass them straight to the email template later
 
 while True:
-    selected_id = input("Please input a product identifier, or 'DONE': " ) # the data input will always be a str
+    selected_id = input("PLEASE INPUT A PRODUCT ID, OR 'DONE': " )
 
     if selected_id.upper() == "DONE":
-        break # stops the loop
-    elif selected_id in valid_ids:
-        #selected_ids.append(selected_id)
-        matching_product = [p for p in products if str(p["id"] == str(selected_id))][0] # can use [0] because we already validated the id, and we can expect there not to be a key error, otherwise we'd have to use a try... except block to handle the KeyError
-        selected_products.append(matching_product)
+        break
     else:
-        print("OH, detected invalid input! Please try again...")
-        next # proceeds into the next iteration of the loop (OK to omit in this basic example because there is no more code following it inside the loop before the loop repeats)
+        try:
+            #print("LOOKING UP PRODUCT", selected_id)
+            matching_products = [p for p in products if str(p["id"]) == str(selected_id)]
+            matching_product = matching_products[0] # this will trigger an IndexError if there are no matching products
+            selected_products.append(matching_product)
+        except IndexError as e:
+            #print(e) #> IndexError: list index out of range
+            print("OH, DETECTED INVALID INPUT. PLEASE TRY AGAIN...")
+            next
 
-#print("SELECTED IDS:", selected_ids)
+print(selected_products)
+
+exit()
 
 #
 # SEND RECEIPT VIA SENDGRID "TEMPLATE EMAIL"

@@ -41,7 +41,7 @@ products = [
 selected_products = [] # capturing products instead of ids, so I can pass them straight to the email template later
 
 while True:
-    selected_id = input("PLEASE INPUT A PRODUCT ID, OR 'DONE': " )
+    selected_id = input("Please input a product id, or 'DONE': " )
 
     if selected_id.upper() == "DONE":
         break
@@ -53,38 +53,61 @@ while True:
             selected_products.append(matching_product)
         except IndexError as e:
             #print(e) #> IndexError: list index out of range
-            print("OH, DETECTED INVALID INPUT. PLEASE TRY AGAIN...")
+            print("Oh, product not found. Please try again...")
             next
 
 #print(selected_products)
+
+if not selected_products:
+    print("Oh, expecting you to select some products before completing the process. Please try again.")
+    exit()
 
 #
 # SEND RECEIPT VIA SENDGRID "TEMPLATE EMAIL"
 # see: https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/packages/sendgrid.md
 #
 
-template_data = {
-    "total_price_usd": "$14.95",
-    "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
-    "products": selected_products
-}
+print("Would you like a receipt?")
+user_email_address = input("Please input your email address, or 'N' to skip: ")
 
-client = SendGridAPIClient(SENDGRID_API_KEY)
-print("CLIENT:", type(client))
+if user_email_address.upper() in ["N", "NO", "N/A"]:
+    print("You've elected to not receive a receipt via email.")
+    pass
+elif user_email_address == "":
+    user_email_address = EMAIL_ADDRESS
+    print("Hello Superuser! Using your default email address.", user_email_address)
+    pass
+elif "@" not in user_email_address:
+    print("Oh, detected invalid email address.")
+    pass
+else:
+    print("Sending receipt via email...")
 
-message = Mail(from_email=EMAIL_ADDRESS, to_emails=EMAIL_ADDRESS)
-print("MESSAGE:", type(message))
+    template_data = {
+        "total_price_usd": "$14.95",
+        "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
+        "products": selected_products
+    }
 
-message.template_id = SENDGRID_TEMPLATE_ID
+    client = SendGridAPIClient(SENDGRID_API_KEY)
+    #print("CLIENT:", type(client))
 
-message.dynamic_template_data = template_data
+    message = Mail(from_email=user_email_address, to_emails=user_email_address)
+    #print("MESSAGE:", type(message))
 
-try:
+    message.template_id = SENDGRID_TEMPLATE_ID
+
+    message.dynamic_template_data = template_data
+
     response = client.send(message)
-    print("RESPONSE:", type(response))
-    print(response.status_code)
-    print(response.body)
-    print(response.headers)
 
-except Exception as e:
-    print("OOPS", e)
+    if str(response.status_code) == "202":
+        print("Email sent successfully.")
+    else:
+        print("Oh, something went wrong with email sending.")
+        #print("RESPONSE:", type(response))
+        print(response.status_code)
+        print(response.body)
+        #print(response.headers)
+
+print("Thanks for shopping!")

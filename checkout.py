@@ -1,5 +1,5 @@
 
-
+import datetime
 import os
 from dotenv import load_dotenv
 from sendgrid import SendGridAPIClient
@@ -45,6 +45,9 @@ products = [
     {"id":20, "name": "Pomegranate Cranberry & Aloe Vera Enrich Drink", "department": "beverages", "aisle": "juice nectars", "price": 4.25}
 ] # based on data from Instacart: https://www.instacart.com/datasets/grocery-shopping-2017
 
+timestamp = datetime.datetime.now()
+human_friendly_timestamp = timestamp.strftime("%Y-%m-%d %H:%M")
+
 #
 # CAPTURE AND VALIDATE USER SELECTIONS
 #
@@ -73,22 +76,30 @@ if not selected_products:
     print("Oh, expecting you to select some products before completing the process. Please try again.")
     exit()
 
-print("---------------------------")
-print("SELECTED PRODUCTS:")
-for p in selected_products:
-    print(f"... {p['name']} {to_usd(p['price'])}")
+#
+# CALCULATE TAX AND TOTALS
+#
 
 subtotal = sum([float(p["price"]) for p in selected_products])
 tax = subtotal * TAX_RATE
 total = subtotal + tax
 
+#
+# DISPLAY RECEIPT ON SCREEN
+#
+
+print("---------------------------")
+print("WELCOME TO THE QUIET CAR GROCERY STORE!")
+print("CHECKOUT AT:", human_friendly_timestamp)
+print("---------------------------")
+print("SELECTED PRODUCTS:")
+for p in selected_products:
+    print(f"... {p['name']} {to_usd(p['price'])}")
+
 print("---------------------------")
 print("SUBTOTAL:", to_usd(subtotal))
 print("TAX:", to_usd(tax))
 print("TOTAL:", to_usd(total))
-
-
-quit()
 
 #
 # SEND RECEIPT VIA SENDGRID "TEMPLATE EMAIL"
@@ -98,30 +109,27 @@ quit()
 print("Would you like a receipt?")
 user_email_address = input("Please input your email address, or 'N' to skip: ")
 
-if user_email_address.upper() in ["N", "NO", "N/A"]:
-    print("You've elected to not receive a receipt via email.")
-    pass
-elif user_email_address == "":
+if user_email_address == "":
     user_email_address = EMAIL_ADDRESS
     print("Hello Superuser! Using your default email address :-D", user_email_address)
-    pass
+
+if user_email_address.upper() in ["N", "NO", "N/A"]:
+    print("You've elected to not receive a receipt via email.")
 elif "@" not in user_email_address:
     print("Oh, detected invalid email address.")
-    pass
 else:
     print("Sending receipt via email...")
 
     template_data = {
         "total_price_usd": to_usd(total),
-        "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
+        "human_friendly_timestamp": human_friendly_timestamp,
         "products": selected_products
     }
+    print(template_data)
 
     client = SendGridAPIClient(SENDGRID_API_KEY)
-    #print("CLIENT:", type(client))
 
     message = Mail(from_email=user_email_address, to_emails=user_email_address)
-    #print("MESSAGE:", type(message))
 
     message.template_id = SENDGRID_TEMPLATE_ID
 
@@ -133,9 +141,7 @@ else:
         print("Email sent successfully.")
     else:
         print("Oh, something went wrong with email sending.")
-        #print("RESPONSE:", type(response))
         print(response.status_code)
         print(response.body)
-        #print(response.headers)
 
 print("Thanks for shopping!")

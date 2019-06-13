@@ -14,7 +14,7 @@ cd shopping-cart-with-email-receipts
 
 ### Credentials Setup
 
-Follow [this tutorial](https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/packages/sendgrid.md) to sign up for a Sendgrid API Key and configure your own Sendgrid Email Template, then locate the template's unique identifier.
+Follow [this tutorial](https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/packages/sendgrid.md) to sign up for a Sendgrid API Key and [configure](https://sendgrid.com/dynamic_templates) your own Sendgrid Email Template, then locate the template's unique identifier.
 
 Create a new file called ".env" in the root directory of this repo, then copy the contents of the "env.example" file into it. Then adapt the values in the ".env" file to specify your own `SENDGRID_API_KEY`,
 `SENDGRID_TEMPLATE_ID`, and `EMAIL_ADDRESS` values, respectively.

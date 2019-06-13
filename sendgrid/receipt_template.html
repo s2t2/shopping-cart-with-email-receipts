@@ -6,8 +6,9 @@
 
 <p>Total: {{total_price_usd}}</p>
 
+<p>You ordered:</p>
 <ul>
 {{#each products}}
-	<li>You ordered: {{this.name}}</li>
+	<li>{{this.name}} ............... {{this.price}}</li>
 {{/each}}
 </ul>

@@ -13,6 +13,15 @@ EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "OOPS, please set env var called
 
 TAX_RATE = 0.0875
 
+# adapted from: https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/datatypes/numbers.md
+def to_usd(my_price):
+    """
+    Converts a numeric value to usd-formatted string, for printing and display purposes. \n
+    Example: to_usd(4000.444444) \n
+    Returns: $4,000.44
+    """
+    return f"${my_price:,.2f}" #> $12,000.71
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -67,17 +76,16 @@ if not selected_products:
 print("---------------------------")
 print("SELECTED PRODUCTS:")
 for p in selected_products:
-    print(f"... {p['name']} {p['price']}")
+    print(f"... {p['name']} {to_usd(p['price'])}")
 
 subtotal = sum([float(p["price"]) for p in selected_products])
 tax = subtotal * TAX_RATE
 total = subtotal + tax
 
 print("---------------------------")
-print("SUBTOTAL:", subtotal)
-print("TAX:", tax)
-print("TOTAL:", total)
-
+print("SUBTOTAL:", to_usd(subtotal))
+print("TAX:", to_usd(tax))
+print("TOTAL:", to_usd(total))
 
 
 quit()
@@ -95,7 +103,7 @@ if user_email_address.upper() in ["N", "NO", "N/A"]:
     pass
 elif user_email_address == "":
     user_email_address = EMAIL_ADDRESS
-    print("Hello Superuser! Using your default email address.", user_email_address)
+    print("Hello Superuser! Using your default email address :-D", user_email_address)
     pass
 elif "@" not in user_email_address:
     print("Oh, detected invalid email address.")
@@ -104,7 +112,7 @@ else:
     print("Sending receipt via email...")
 
     template_data = {
-        "total_price_usd": "$14.95",
+        "total_price_usd": to_usd(total),
         "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
         "products": selected_products
     }

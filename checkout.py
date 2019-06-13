@@ -118,6 +118,10 @@ elif "@" not in user_email_address:
 else:
     print("Sending receipt via email...")
 
+    # format all product prices as we'd like them to appear in the email...
+    for p in selected_products:
+        p["price"] = to_usd(p["price"])
+
     receipt = {
         "subtotal_price_usd": to_usd(subtotal),
         "tax_price_usd": to_usd(tax),

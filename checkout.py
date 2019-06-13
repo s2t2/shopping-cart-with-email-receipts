@@ -31,9 +31,9 @@ selected_ids = []
 while True:
     selected_id = input("Please input a product identifier, or 'DONE': " ) # the data input will always be a str
 
-    if selected_id == "DONE":
+    if selected_id.upper() == "DONE":
         break # stops the loop
-    elif str(selected_id) in valid_ids:
+    elif selected_id in valid_ids:
         selected_ids.append(selected_id)
     else:
         print("OH, detected invalid input! Please try again...")

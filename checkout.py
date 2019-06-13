@@ -56,9 +56,7 @@ while True:
             print("OH, DETECTED INVALID INPUT. PLEASE TRY AGAIN...")
             next
 
-print(selected_products)
-
-exit()
+#print(selected_products)
 
 #
 # SEND RECEIPT VIA SENDGRID "TEMPLATE EMAIL"
@@ -68,13 +66,7 @@ exit()
 template_data = {
     "total_price_usd": "$14.95",
     "human_friendly_timestamp": "June 1st, 2019 10:00 AM",
-    "products":[
-        {"id":1, "name": "Product 1"},
-        {"id":2, "name": "Product 2"},
-        {"id":3, "name": "Product 3"},
-        {"id":2, "name": "Product 2"},
-        {"id":1, "name": "Product 1"}
-    ]
+    "products": selected_products
 }
 
 client = SendGridAPIClient(SENDGRID_API_KEY)

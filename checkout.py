@@ -11,6 +11,8 @@ SENDGRID_API_KEY = os.environ.get("SENDGRID_API_KEY", "OOPS, please set env var 
 SENDGRID_TEMPLATE_ID = os.environ.get("SENDGRID_TEMPLATE_ID", "OOPS, please set env var called 'SENDGRID_TEMPLATE_ID'")
 EMAIL_ADDRESS = os.environ.get("EMAIL_ADDRESS", "OOPS, please set env var called 'EMAIL_ADDRESS'")
 
+TAX_RATE = 0.0875
+
 products = [
     {"id":1, "name": "Chocolate Sandwich Cookies", "department": "snacks", "aisle": "cookies cakes", "price": 3.50},
     {"id":2, "name": "All-Seasons Salt", "department": "pantry", "aisle": "spices seasonings", "price": 4.99},
@@ -61,6 +63,24 @@ while True:
 if not selected_products:
     print("Oh, expecting you to select some products before completing the process. Please try again.")
     exit()
+
+print("---------------------------")
+print("SELECTED PRODUCTS:")
+for p in selected_products:
+    print(f"... {p['name']} {p['price']}")
+
+subtotal = sum([float(p["price"]) for p in selected_products])
+tax = subtotal * TAX_RATE
+total = subtotal + tax
+
+print("---------------------------")
+print("SUBTOTAL:", subtotal)
+print("TAX:", tax)
+print("TOTAL:", total)
+
+
+
+quit()
 
 #
 # SEND RECEIPT VIA SENDGRID "TEMPLATE EMAIL"

@@ -1,4 +1,6 @@
 {
+    "subtotal_price_usd": "$XX.XX",
+    "tax_price_usd": "$XX.XX",
     "total_price_usd": "$13.95",
     "human_friendly_timestamp": "July 4th, 2019 10:00 AM",
     "products":[

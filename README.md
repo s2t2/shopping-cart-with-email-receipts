@@ -2,6 +2,8 @@
 
 ... with functionality for sending a receipt via email.
 
+![](/sendgrid/receipt_iphone.png)
+
 ## Installation
 
 Fork [this repo](https://github.com/s2t2/shopping-cart-with-email-receipts), then clone your fork to download it locally onto your computer. Then navigate there from the command-line:
@@ -12,9 +14,13 @@ cd shopping-cart-with-email-receipts
 
 ## Setup
 
-### Credentials Setup
+### Email Template Setup
 
-Follow [this tutorial](https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/packages/sendgrid.md) to sign up for a Sendgrid API Key and [configure](https://sendgrid.com/dynamic_templates) your own Sendgrid Email Template, then locate the template's unique identifier.
+Follow [this tutorial](https://github.com/prof-rossetti/nyu-info-2335-201905/blob/master/notes/python/packages/sendgrid.md) to sign up for a Sendgrid API Key and [configure](https://sendgrid.com/dynamic_templates) your own Sendgrid Email Template, then locate the template's unique identifier. We'll need the API Key and the Template Id later.
+
+Configure the email template with [test data like this](/sendgrid/receipt_data.json) and ["handlebars-flavored" HTML code like this](/sendgrid/receipt_template.html).
+
+### Credentials Setup
 
 Create a new file called ".env" in the root directory of this repo, then copy the contents of the "env.example" file into it. Then adapt the values in the ".env" file to specify your own `SENDGRID_API_KEY`,
 `SENDGRID_TEMPLATE_ID`, and `EMAIL_ADDRESS` values, respectively.

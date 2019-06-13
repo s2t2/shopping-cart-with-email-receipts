@@ -58,7 +58,7 @@ while True:
     selected_id = input("Please input a product id, or 'DONE': " )
 
     if selected_id.upper() == "DONE":
-        break
+        break # (break out of the while loop)
     else:
         try:
             #print("LOOKING UP PRODUCT", selected_id)
@@ -68,9 +68,7 @@ while True:
         except IndexError as e:
             #print(e) #> IndexError: list index out of range
             print("Oh, product not found. Please try again...")
-            next
-
-#print(selected_products)
+            #next # (next iteration of the while loop)
 
 if not selected_products:
     print("Oh, expecting you to select some products before completing the process. Please try again.")
@@ -89,7 +87,7 @@ total = subtotal + tax
 #
 
 print("---------------------------")
-print("WELCOME TO THE QUIET CAR GROCERY STORE!")
+print("WELCOME TO THE 'QUIET CAR' GROCERY STORE!")
 print("CHECKOUT AT:", human_friendly_timestamp)
 print("---------------------------")
 print("SELECTED PRODUCTS:")
@@ -107,11 +105,11 @@ print("TOTAL:", to_usd(total))
 #
 
 print("Would you like a receipt?")
-user_email_address = input("Please input your email address, or 'N' to skip: ")
+user_email_address = input("Please input your email address, or 'N' to opt-out: ")
 
-if user_email_address == "":
+if user_email_address.upper() == "Y":
+    print(f"Hello Superuser! Using your default email address {EMAIL_ADDRESS} :-D")
     user_email_address = EMAIL_ADDRESS
-    print("Hello Superuser! Using your default email address :-D", user_email_address)
 
 if user_email_address.upper() in ["N", "NO", "N/A"]:
     print("You've elected to not receive a receipt via email.")
@@ -120,27 +118,27 @@ elif "@" not in user_email_address:
 else:
     print("Sending receipt via email...")
 
-    template_data = {
+    receipt = {
+        "subtotal_price_usd": to_usd(subtotal),
+        "tax_price_usd": to_usd(tax),
         "total_price_usd": to_usd(total),
         "human_friendly_timestamp": human_friendly_timestamp,
         "products": selected_products
     }
-    print(template_data)
+    #print(receipt)
 
     client = SendGridAPIClient(SENDGRID_API_KEY)
 
     message = Mail(from_email=user_email_address, to_emails=user_email_address)
-
     message.template_id = SENDGRID_TEMPLATE_ID
-
-    message.dynamic_template_data = template_data
+    message.dynamic_template_data = receipt
 
     response = client.send(message)
 
     if str(response.status_code) == "202":
-        print("Email sent successfully.")
+        print("Email sent successfully!")
     else:
-        print("Oh, something went wrong with email sending.")
+        print("Oh, something went wrong with sending the email.")
         print(response.status_code)
         print(response.body)
 

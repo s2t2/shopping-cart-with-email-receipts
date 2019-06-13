@@ -4,11 +4,15 @@
 
 <p>Date: {{human_friendly_timestamp}}</p>
 
-<p>Total: {{total_price_usd}}</p>
-
 <p>You ordered:</p>
 <ul>
 {{#each products}}
-	<li>{{this.name}} ............... {{this.price}}</li>
+	<li>{{this.price}} ... {{this.name}}</li>
 {{/each}}
 </ul>
+
+<p>Subtotal: {{subtotal_price_usd}}</p>
+
+<p>Sales Tax: {{tax_price_usd}}</p>
+
+<p>Total: {{total_price_usd}}</p>
